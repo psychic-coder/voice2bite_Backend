@@ -166,3 +166,73 @@ res.status(200).json({
   restaurant
 })
 })
+
+export const getAllOrders = TryCatch(async (req, res) => {
+  const orders = await prisma.order.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      restaurant: {
+        select: {
+          id: true,
+          name: true,
+          address: true,
+        },
+      },
+      orderItems: {
+        include: {
+          foodItem: {
+            select: {
+              id: true,
+              name: true,
+              price: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  
+
+  res.status(200).json({
+    success: true,
+    message: "All orders fetched successfully",
+    orders,
+  });
+});
+
+
+export const deleteRestaurant = TryCatch(async (req, res) => {
+  const restaurantId = parseInt(req.params.id);
+
+  const restaurant = await prisma.restaurant.findUnique({
+    where: { id: restaurantId },
+  });
+
+  if (!restaurant) {
+    return res.status(404).json({
+      success: false,
+      message: "Restaurant not found",
+    });
+  }
+
+  await prisma.restaurant.delete({
+    where: { id: restaurantId },
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Restaurant deleted successfully",
+  });
+});
+
+
+
