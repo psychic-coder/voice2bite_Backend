@@ -51,7 +51,7 @@ model Restaurant {
   hotelAdmins HotelAdmin[]
   foodItems   FoodItem[]
   orders      Order[]
-  photoUrl    String
+  photoUrl    String?
 }
 
 model FoodItem {

@@ -7,6 +7,7 @@ import { errorMiddleware } from "./middlewares/error.js";
 import registerRoute from "./routes/auth.route.js";
 import customerRoute from "./routes/customer.route.js";
 import hotelAdminRoute from "./routes/hotelAdmin.route.js";
+import companyAdminRoute from "./routes/companyAdmin.route.js";
 import cookieParser from 'cookie-parser';
 
 
@@ -35,6 +36,7 @@ app.use(morgan("dev"));
 app.use("/api", registerRoute);
 app.use("/api/customer", customerRoute);
 app.use("/api/hotelAdmin", hotelAdminRoute);
+app.use("/api/companyAdmin", companyAdminRoute);
 
 // 404 Handler
 // app.all("*", (req, res) => {
