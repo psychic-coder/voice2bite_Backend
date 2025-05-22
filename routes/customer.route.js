@@ -8,11 +8,12 @@ const router=express.Router();
 
 router.use(isAuthenticated)
 router.get("/getAllRestaurants",getAllRestaurants);
+router.get("/getAllRestaurants/:id",getSingleRestaurant);
 router.get("/me",getCustomerProfile);
 router.put("/me",updateCustomerProfile);
 router.get("/restaurants/nearby",getNearbyRestaurants);
 router.get("/restaurantMenu/:id",getRestaurantMenu);
-router.get("/getAllRestaurants/:id",getSingleRestaurant);
+
 router.post("/placeOrder",placeOrder);
 router.get("/orderHistory",getOrderHistory);
 router.post("/getFoodItemsByTags",getFoodItemByTags)
