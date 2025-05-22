@@ -146,6 +146,12 @@ export const getSingleRestaurant = TryCatch(async (req, res) => {
       id: true,
       name: true,
       address: true,
+      location:true,
+      rating:true,
+      hotelTags:true,
+      desc:true,
+      category:true,
+
       hotelAdmins: {
         select: {
           id: true,
@@ -158,6 +164,9 @@ export const getSingleRestaurant = TryCatch(async (req, res) => {
           id: true,
           name: true,
           price: true,
+          description:true,
+          tags:true,
+          photoUrl:true
         },
       },
     },
