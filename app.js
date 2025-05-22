@@ -11,15 +11,15 @@ import companyAdminRoute from "./routes/companyAdmin.route.js";
 import cookieParser from 'cookie-parser';
 
 
-// Load environment variables
+
 dotenv.config({ path: "./.env" });
 export const envMode = process.env.NODE_ENV?.trim() || "DEVELOPMENT";
 const port = process.env.PORT || 3000;
 
-// Initialize app
+
 const app = express();
 
-// Middleware setup
+
 app.use(
   helmet({
     contentSecurityPolicy: envMode !== "DEVELOPMENT",
@@ -27,7 +27,15 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(cors({ origin: "*", credentials: true }));
+
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, 
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
