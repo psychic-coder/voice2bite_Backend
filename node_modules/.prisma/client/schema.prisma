@@ -48,7 +48,7 @@ model Restaurant {
   latitude    Float
   longitude   Float
   address     String
-  Location    String       @default("Unknown")
+  location    String       @default("Unknown")
   rating      Int          @default(0)
   hotelTags   String[]
   desc        String       @default("No description available")
@@ -57,6 +57,7 @@ model Restaurant {
   foodItems   FoodItem[]
   orders      Order[]
   photoUrl    String?
+  phone       String       @default("No contact available")
 }
 
 model FoodItem {

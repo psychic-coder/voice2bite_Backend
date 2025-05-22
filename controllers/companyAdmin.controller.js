@@ -79,7 +79,7 @@ export const updateCompanyAdminProfile = TryCatch(async (req, res) => {
   });
 });
 
-export const getAllHotelAdmins=TryCatch(async (req,res)=>{
+export const getAllHotelAdmins = TryCatch(async (req, res) => {
   const hotelAdmins = await prisma.hotelAdmin.findMany({
     select: {
       id: true,
@@ -98,19 +98,29 @@ export const getAllHotelAdmins=TryCatch(async (req,res)=>{
   });
 
   res.status(200).json({
-    success:true,
-    message:"Hotel Admins fetched Successfully",
+    success: true,
+    message: "Hotel Admins fetched Successfully",
     hotelAdmins,
-    count:hotelAdmins.length
-  })
-})
+    count: hotelAdmins.length,
+  });
+});
 
-export  const getAllRestaurants=TryCatch(async (req,res)=>{
+export const getAllRestaurants = TryCatch(async (req, res) => {
   const restaurants = await prisma.restaurant.findMany({
     select: {
       id: true,
       name: true,
       address: true,
+      latitude: true,
+      longitude: true,
+      location: true,
+      rating: true,
+      hotelTags: true,
+      desc: true,
+      category: true,
+
+      photoUrl: true,
+      phone: String,
       hotelAdmins: {
         select: {
           id: true,
@@ -122,15 +132,14 @@ export  const getAllRestaurants=TryCatch(async (req,res)=>{
   });
 
   res.status(200).json({
-    success:true,
-    message:"Fetched all restaurants successfully",
-    restaurants
-  })
-})
+    success: true,
+    message: "Fetched all restaurants successfully",
+    restaurants,
+  });
+});
 
-
-export const getSingleRestaurant=TryCatch(async (req,res)=>{
-  const restaurantId= parseInt(req.params.id);
+export const getSingleRestaurant = TryCatch(async (req, res) => {
+  const restaurantId = parseInt(req.params.id);
   const restaurant = await prisma.restaurant.findUnique({
     where: { id: restaurantId },
     select: {
@@ -153,24 +162,24 @@ export const getSingleRestaurant=TryCatch(async (req,res)=>{
       },
     },
   });
-if(!restaurant){
-  return res.status(404).json({
-    success:false,
-    message:"Restaurant not found"
-  })
-}
+  if (!restaurant) {
+    return res.status(404).json({
+      success: false,
+      message: "Restaurant not found",
+    });
+  }
 
-res.status(200).json({
-  success:true,
-  message:"Fetched restaurant successfully",
-  restaurant
-})
-})
+  res.status(200).json({
+    success: true,
+    message: "Fetched restaurant successfully",
+    restaurant,
+  });
+});
 
 export const getAllOrders = TryCatch(async (req, res) => {
   const orders = await prisma.order.findMany({
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
     include: {
       user: {
@@ -200,7 +209,6 @@ export const getAllOrders = TryCatch(async (req, res) => {
       },
     },
   });
-  
 
   res.status(200).json({
     success: true,
@@ -208,7 +216,6 @@ export const getAllOrders = TryCatch(async (req, res) => {
     orders,
   });
 });
-
 
 export const deleteRestaurant = TryCatch(async (req, res) => {
   const restaurantId = parseInt(req.params.id);
@@ -233,6 +240,3 @@ export const deleteRestaurant = TryCatch(async (req, res) => {
     message: "Restaurant deleted successfully",
   });
 });
-
-
-

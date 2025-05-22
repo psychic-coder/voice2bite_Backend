@@ -60,6 +60,7 @@ export const registerCompanyAdmin = async (req, res) => {
 
 export const hotelAdmin = async (req, res) => {
   try {
+    console.log(req.body);
     const {
       name,
       email,
@@ -69,7 +70,13 @@ export const hotelAdmin = async (req, res) => {
       photoUrl,
       latitude,
       longitude,
+      phone,
+      hotelTags,
+      category,
+      desc,
+      location
     } = req.body;
+
     if (
       !name ||
       !email ||
@@ -78,43 +85,55 @@ export const hotelAdmin = async (req, res) => {
       !address ||
       latitude == null ||
       longitude == null ||
-      !photoUrl
-    )
+      !photoUrl ||
+      !Array.isArray(category) || category.length === 0 ||
+      !Array.isArray(hotelTags) || hotelTags.length === 0 ||
+      !desc ||
+      !location ||
+      !phone
+    ) {
       return res.status(400).json({ message: "Send all the fields" });
-
+    }
+    
     const existing = await prisma.hotelAdmin.findUnique({
       where: { email },
     });
     if (existing) {
       return res.status(400).json({ message: "Email already in use" });
     }
+
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const admin = await prisma.hotelAdmin.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-          role:"HOTEL_ADMIN",
-          restaurant: {
-            create: {
-              name: restaurantName,
-              address,
-              latitude: parseFloat(latitude),
-              longitude: parseFloat(longitude),
-              photoUrl
-            }
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role: "HOTEL_ADMIN",
+        restaurant: {
+          create: {
+            name: restaurantName,
+            address,
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+            photoUrl,
+            phone,
+            hotelTags,  // array of strings
+            category,   // array of strings
+            desc,
+            location
           }
-        },
-        include: {
-          restaurant: true
         }
-      });
+      },
+      include: {
+        restaurant: true
+      }
+    });
 
-      const token=generateToken(admin);
-      const tokenData=admin;
-      sendToken(res,200,tokenData,token,"User and Restaurant registered successfully")
+    const token = generateToken(admin);
+    const tokenData = admin;
+    sendToken(res, 200, tokenData, token, "User and Restaurant registered successfully");
 
   } catch (error) {
     console.log(error);
@@ -123,6 +142,7 @@ export const hotelAdmin = async (req, res) => {
     });
   }
 };
+
 
 
 export const login = async (req, res) => {
