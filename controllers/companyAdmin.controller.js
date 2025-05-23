@@ -1,6 +1,6 @@
 import { TryCatch } from "../middlewares/error.js";
 import prisma from "../prisma/client.js";
-import ErrorHandler from "../utils/errorHandler.js";
+
 import bcrypt from "bcryptjs";
 
 export const getCompanyAdminProfile = TryCatch(async (req, res, next) => {
