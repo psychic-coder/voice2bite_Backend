@@ -20,6 +20,7 @@ export const updateCustomerProfile = TryCatch(async (req, res) => {
   res.status(201).json({
     success: true,
     message: "Updated the profile Successfully",
+    updated
   });
 });
 
