@@ -16,7 +16,7 @@ pids
 
 # dotenv environment variables
 .env
-.env.*
+
 
 # Prisma
 prisma/dev.db
