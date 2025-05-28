@@ -330,4 +330,56 @@ export const getHotelOrders = TryCatch(async (req, res) => {
       data: formattedItems
     });
   });
+
+
+  export const getFoodItemById=TryCatch(async (req,res)=>{
+    const foodItemId= req.params.id;
+
+
+    if (!foodItemId || isNaN(foodItemId)) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Invalid food item ID' 
+      });
+    }
+
+    const foodItem=await prisma.foodItem.findUnique({
+      where: {
+        id: Number(foodItemId),
+      },
+      include: {
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+            address: true,
+            location: true,
+            rating: true,
+            photoUrl: true,
+          },
+        },
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    if(!foodItem){
+      return res.status(400).json({
+        message:"Item not found",
+        success:false
+      })
+    }
+
+    return res.status(200).json({
+      success:true,
+      message:"Item is successfully found",
+      foodItem
+    })
+
+  })
   
