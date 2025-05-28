@@ -281,3 +281,53 @@ export const getHotelOrders = TryCatch(async (req, res) => {
     });
   });
   
+
+
+  export const getAllFoodItems = TryCatch(async (req, res, next) => {
+    const adminId = req.user.id;
+  
+    
+    const hotelAdmin = await prisma.hotelAdmin.findUnique({
+      where: { id: adminId },
+      select: { restaurantId: true }
+    });
+  
+    if (!hotelAdmin) return next(new ErrorHandler("Hotel admin not found", 404));
+  
+    
+    const foodItems = await prisma.foodItem.findMany({
+      where: {
+        restaurantId: hotelAdmin.restaurantId
+      },
+      orderBy: { id: 'desc' },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+  
+    
+    const formattedItems = foodItems.map(item => ({
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      isAvailable: item.isAvailable,
+      tags: item.tags,
+      photoUrl: item.photoUrl,
+      createdAt: item.createdAt,
+      createdBy: item.createdBy
+    }));
+  
+    res.status(200).json({
+      success: true,
+      message: "Food items retrieved successfully",
+      data: formattedItems
+    });
+  });
+  
