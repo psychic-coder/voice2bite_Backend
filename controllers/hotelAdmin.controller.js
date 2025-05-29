@@ -240,43 +240,61 @@ export const getHotelOrders = TryCatch(async (req, res) => {
     });
   });
 
-  export const confirmHotelOrder = TryCatch(async (req, res) => {
-    const { id: userId } = req.user;
-    const orderId = parseInt(req.params.orderId);
+  export const updateOrderStatus = TryCatch(async (req, res) => {
+    const { id: adminId } = req.user; 
+    const { orderId, status } = req.params;
   
-    const hotelAdmin = await prisma.hotelAdmin.findUnique({
-      where: { id: userId },
-      include: { restaurant: true },
-    });
+    const validStatuses = ["CONFIRMED", "REJECTED", "DELIVERED"];
+    const statusUpper = status.toUpperCase();
   
-    if (!hotelAdmin || !hotelAdmin.restaurant) {
-      return res.status(404).json({ message: "Hotel admin or associated restaurant not found" });
+    if (!validStatuses.includes(statusUpper)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status. Must be CONFIRMED, REJECTED, or DELIVERED.",
+      });
     }
   
     const order = await prisma.order.findUnique({
-      where: { id: orderId },
+      where: { id: parseInt(orderId) },
+      include: {
+        restaurant: {
+          select: { createdById: true }, 
+        },
+      },
     });
   
-    if (!order || order.restaurantId !== hotelAdmin.restaurant.id) {
-      return res.status(404).json({ message: "Order not found or unauthorized access" });
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found.",
+      });
+    }
+  
+  
+    if (order.restaurant.createdById !== adminId) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized to modify this order.",
+      });
+    }
+  
+    if (order.status !== "PENDING") {
+      return res.status(400).json({
+        success: false,
+        message: `Cannot update an order that is already ${order.status}`,
+      });
     }
   
     const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
-      data: { status: "CONFIRMED" },
-      include: {
-        user: true,
-        orderItems: {
-          include: {
-            foodItem: true,
-          },
-        },
+      where: { id: parseInt(orderId) },
+      data: {
+        status: statusUpper,
       },
     });
   
     res.status(200).json({
       success: true,
-      message: "Order confirmed successfully",
+      message: `Order status updated to ${statusUpper}`,
       order: updatedOrder,
     });
   });
