@@ -8,6 +8,7 @@ import registerRoute from "./routes/auth.route.js";
 import customerRoute from "./routes/customer.route.js";
 import hotelAdminRoute from "./routes/hotelAdmin.route.js";
 import companyAdminRoute from "./routes/companyAdmin.route.js";
+import searchRoute from "./routes/search.routes.js";
 import cookieParser from 'cookie-parser';
 
 
@@ -45,6 +46,7 @@ app.use("/api", registerRoute);
 app.use("/api/customer", customerRoute);
 app.use("/api/hotelAdmin", hotelAdminRoute);
 app.use("/api/companyAdmin", companyAdminRoute);
+app.use("/api/search", searchRoute);
 
 // 404 Handler
 // app.all("*", (req, res) => {
