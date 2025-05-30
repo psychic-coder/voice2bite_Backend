@@ -64,8 +64,7 @@ const matchingRestaurants = await prisma.restaurant.findMany({
   await redisClient.lTrim(RECENT_SEARCH_KEY, 0, 9);
 
 
-  console.log(hotels);
-  console.log(foodItems)
+  
 
   res.status(200).json({
     message: "Query made successfully",
