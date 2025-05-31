@@ -3,7 +3,7 @@ import prisma from "../prisma/client.js";
 
 import bcrypt from "bcryptjs";
 
-export const getCompanyAdminProfile = TryCatch(async (req, res, next) => {
+export const getCompanyAdminProfile = TryCatch(async (req, res) => {
   const adminId = Number(req.user.id);
   if (isNaN(adminId) || adminId <= 0) {
     return res.status(404).json({ message: "Invalid Admin Id " });
