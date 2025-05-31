@@ -240,12 +240,17 @@ export const deleteRestaurant = TryCatch(async (req, res) => {
     });
   }
 
+  await prisma.hotelAdmin.deleteMany({
+    where: { restaurantId },
+  });
+
   await prisma.restaurant.delete({
     where: { id: restaurantId },
   });
 
   res.status(200).json({
     success: true,
-    message: "Restaurant deleted successfully",
+    message: "Restaurant and related hotel admins deleted successfully",
   });
 });
+

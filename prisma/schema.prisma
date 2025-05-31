@@ -30,17 +30,18 @@ model CompanyAdmin {
 }
 
 model HotelAdmin {
-  id               Int        @id @default(autoincrement())
-  name             String
-  email            String     @unique
-  password         String
-  restaurant       Restaurant @relation(fields: [restaurantId], references: [id])
-  restaurantId     Int
-  createdAt        DateTime   @default(now())
+  id           Int        @id @default(autoincrement())
+  name         String
+  email        String     @unique
+  password     String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  restaurantId Int
+  createdAt    DateTime   @default(now())
   confirmedOrders  Order[]
   createdFoodItems FoodItem[]
-  role             String     @default("HOTEL_ADMIN")
+  role         String     @default("HOTEL_ADMIN")
 }
+
 
 model Restaurant {
   id          Int          @id @default(autoincrement())
@@ -66,7 +67,7 @@ model FoodItem {
   description  String
   price        Float
   isAvailable  Boolean     @default(true)
-  tags         String[] // e.g., ["veg", "spicy", "starter"]
+  tags         String[] 
   restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
   restaurantId Int
   createdBy    HotelAdmin  @relation(fields: [createdById], references: [id])
