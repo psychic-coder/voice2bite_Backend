@@ -5,10 +5,11 @@ import { getAllRestaurants, getSingleRestaurant } from "../controllers/companyAd
 
 
 const router=express.Router();
-
+router.get("/getAllRestaurants", getAllRestaurants);
+router.get("/getAllRestaurants/:id", getSingleRestaurant);
 router.use(isAuthenticated)
-router.get("/getAllRestaurants",getAllRestaurants);
-router.get("/getAllRestaurants/:id",getSingleRestaurant);
+// router.get("/getAllRestaurants",getAllRestaurants);
+// router.get("/getAllRestaurants/:id",getSingleRestaurant);
 router.get("/me",getCustomerProfile);
 router.put("/me",updateCustomerProfile);
 router.get("/restaurants/nearby",getNearbyRestaurants);
